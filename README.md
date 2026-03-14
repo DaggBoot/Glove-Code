@@ -1,15 +1,15 @@
-# Glove Mouse & IUPAC Molecule Parser
+# Glove Mouse
 
 ## Overview
 
 This repository contains two projects demonstrating hardware and software integration for computational chemistry and human-computer interaction:
 
-1. **Smart Glove Mouse** – A wearable glove interfaced with a Raspberry Pi / microcontroller to act as a mouse using **flex sensors** and an **MPU6050 IMU**.
-2. **IUPAC Molecule Parser** – A Python program that parses **organic molecular formulas** and represents them as graphs of atoms and bonds, with support for multiple elements and functional groups.
+Documentation of the process:
+https://docs.google.com/document/d/1xA9Bw5oXs85HT2D1c6V7PJc5jY7L_LD3KcEMkghLs18/edit?usp=sharing
 
 ---
 
-## Project 1: Smart Glove Mouse
+## Smart Glove Mouse
 
 ### Description
 
