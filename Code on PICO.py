@@ -1,3 +1,12 @@
+"""
+Glove Sensor Data Acquisition
+
+This script reads data from:
+- MPU6050 (accelerometer + gyroscope)
+- Two flex sensors (analog inputs)
+
+It calculates pitch, roll, yaw, and sends the data over UART.
+"""
 # Import relavent modules
 import machine
 import time
@@ -26,13 +35,13 @@ if device_count == 0:
 else:
     print(device_count, 'devices found.')
     led.off()
-    
-# Set up the MPU6050 class 
+
+# Set up the MPU6050 class
 mpu = MPU6050.MPU6050(i2c)
 
 # wake up the MPU6050 from sleep
 mpu.wake()
-   
+
 # Initialise variables
 pGy = 0
 rGy = 0
@@ -41,7 +50,9 @@ rAc = 0
 pClr = 0
 rClr = 0
 tLoop = 0
-
+yaw = 0
+errP = 0
+errR = 0
 
 # continuously print the data
 # code for the flex sensors
@@ -50,32 +61,30 @@ while True:
     tStart = time.ticks_ms()
     f1 = flex_1.read_u16()
     f2 = flex_2.read_u16()
-    
+
     Gyro = mpu.read_gyro_data()
     xGyro = Gyro[0]
     yGyro = -Gyro[1]
     zGyro = Gyro[2]
-    
+
     Accel = mpu.read_accel_data()
     xAccel = Accel[0]
     yAccel = Accel[1]
     zAccel = Accel[2]
-    
+
     pGy += xGyro * tLoop
     rGy += yGyro * tLoop
     yaw += zGyro * tLoop
-    pAc = math.atan(yAccel/zAccel)/(2*math.pi)*360
-    rAc = math.atan(xAccel/zAccel)/(2*math.pi)*360
-    
-    pClr = 0.0025*pAc + 0.9975*(pClr + xGyro * tLoop) 
-    rClr = 0.0025*rAc + 0.9975*(rClr + yGyro * tLoop) 
-    
+    pAc = math.atan2(yAccel, zAccel)/(2*math.pi)*360
+    rAc = math.atan2(xAccel, zAccel)/(2*math.pi)*360
+
+    pClr = 0.0025*pAc + 0.9975*(pClr + xGyro * tLoop)
+    rClr = 0.0025*rAc + 0.9975*(rClr + yGyro * tLoop)
+
     errP += (pAc-pClr)*tLoop
     errR += (rAc-rClr)*tLoop
-    
-    print(yaw,pClr,rClr,f1,f2)
-        
+
+    print(yaw, pClr, rClr, f1, f2)
+
     tStop = time.ticks_ms()
     tLoop = (tStop - tStart) * 0.001
-    
- 
